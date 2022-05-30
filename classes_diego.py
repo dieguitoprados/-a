@@ -4,7 +4,6 @@ Created on Thu May  5 01:14:22 2022
 
 @author: diegu
 """
-
 import datetime as dt
 import streamlit as st
 import pandas as pd
@@ -20,7 +19,7 @@ import plotly.graph_objects as go
 from scipy.stats import skew, kurtosis, chi2, linregress
 import waterfall_chart
 from scipy.stats import norm
-
+import matplotlib
 
 
 import functions_diego as f
@@ -39,9 +38,16 @@ class get_data():
         self.price=[]
         self.annual=bool()
         self.dates=pd.DataFrame()
+        self.price_ratios=[]
+        
+        self.plotin=None
+
         self.sp=fmp.sp500_constituent(apikey)
         self.sp_fin=[]
         self.sp_rat=[]
+        
+        
+        
 
         
     def get_financials(self): 
@@ -51,13 +57,21 @@ class get_data():
                 self.financials[i].append(self.stocks[i])
                 self.financials[i].append(list())
                 self.financials[i].append(list())
+                self.financials[i].append(list())
                 self.financials[i][1].append(f.clean_financials(fmp.balance_sheet_statement(self.apikey, self.stocks[i],'quarter', 15)))
                 self.financials[i][1].append(f.clean_financials(fmp.income_statement(self.apikey, self.stocks[i],'quarter', 15)))
                 self.financials[i][1].append(f.clean_financials(fmp.cash_flow_statement(self.apikey, self.stocks[i],'quarter', 15)))
-                self.financials[i][1].append(f.clean_financials(pd.DataFrame(fmp.financial_ratios(self.apikey, self.stocks[i],limit=15))))
+                self.financials[i][1].append(f.clean_financials(fmp.financial_ratios(self.apikey, self.stocks[i],period='quarter',limit=15)))
                 self.financials[i][2].append(f.clean_financials(fmp.balance_sheet_statement(self.apikey, self.stocks[i],'annual', 15)))
                 self.financials[i][2].append(f.clean_financials(fmp.income_statement(self.apikey, self.stocks[i],'annual', 15)))
                 self.financials[i][2].append(f.clean_financials(fmp.cash_flow_statement(self.apikey, self.stocks[i],'annual', 15)))
+                self.financials[i][1].append(f.clean_financials(fmp.financial_ratios(self.apikey, self.stocks[i],period='annual',limit=15)))
+                self.financials[i][3].append(f.ttm(f.clean_financials(fmp.balance_sheet_statement(self.apikey, self.stocks[i],'quarter', 15))))
+                self.financials[i][3].append(f.ttm(f.clean_financials(fmp.income_statement(self.apikey, self.stocks[i],'quarter', 15))))
+                self.financials[i][3].append(f.ttm(f.clean_financials(fmp.cash_flow_statement(self.apikey, self.stocks[i],'quarter', 15))))
+
+            
+            
             except Exception:
                 pass
 
@@ -96,6 +110,40 @@ class get_data():
             except Exception:
                 pass            
         return self.price
+    def get_price_ratios(self):
+        for i in range(0, len(self.stocks)):
+            p=self.price[i][1]['close']
+            eps=self.financials[i][1][1]['eps']
+            
+            
+            
+    def histt(self):
+        for i in range(0,len(self.stocks)):
+            plt.style.use('seaborn-darkgrid')
+            fig, ax = plt.subplots()  
+            for n in range(0,len(self.inputs)):
+                plt.plot(self.financials[i][1][3].index,self.financials[i][1][3]['currentRatio'], label='currentRatio',marker='o', markersize=4, color='limegreen')
+            ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc='lower left',
+                                  ncol=2, mode="expand", borderaxespad=0.)
+            plt.xticks(rotation = 80)
+            ax.yaxis.grid(True, color='palegreen', alpha=0.3)
+
+
+            ax.set_facecolor("white")
+            ax.set_xlabel(plt.legend())
+            ax.set_xlabel(self.stocks[i]+' Liquidity Ratios TTM',  color='seagreen',
+                          weight='bold')
+# ax.legend()
+            ax.text(
+                    0.75,
+                    0.02,
+                    'Greenfield Capital Advisors Group S.L.',
+                    horizontalalignment='center',
+                    verticalalignment='top',
+                    transform=ax.transAxes)
+            fig.tight_layout()
+
+            
     
     
     def hist_inc(self):
@@ -103,11 +151,11 @@ class get_data():
             try:
                 plt.style.use('seaborn-darkgrid')
 
-                fig, ax = plt.subplots()
+                fig, ax = plt.subplots(figsize=(8,5))
                 
                 # Save the chart so we can loop through the bars below.
                     
-                bars=ax.bar(x=np.arange(self.financials[i][1][1]['revenue'].size),color='lime',height=self.financials[i][1][1]['revenue'],label='revenue',tick_label=self.financials[i][1][1].index)
+                bars=ax.bar(x=np.arange(self.financials[i][1][1]['revenue'].size),color='lime',height=self.financials[i][1][1]['revenue'],label='revenue',tick_label=self.financials[i][1][1].index.strftime('%d/%m/%Y'))
                 for bar in bars:
                     ax.text(
                         bar.get_x() + bar.get_width() / 2,
@@ -150,6 +198,9 @@ class get_data():
                         color='black',
                         weight='bold',size=8
                     )
+                    
+                    
+
 
                 ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc='lower left',
                                       ncol=2, mode="expand", borderaxespad=0.)
@@ -163,16 +214,20 @@ class get_data():
                 ax.set_axisbelow(True)
                 ax.yaxis.grid(False)
                 ax.xaxis.grid(False)
-
+                
+                ax.get_yaxis().set_major_formatter(matplotlib.ticker.FuncFormatter(lambda x, p: format(int(x), ',')))
+                scale_y = 1e6
+                ticks_y = matplotlib.ticker.FuncFormatter(lambda x, pos: '{0:g}'.format(x/scale_y))
+                ax.yaxis.set_major_formatter(ticks_y)
+                ax.set_ylabel('Income in millions', color='darkgreen')
                 # ax.set_xlabel(plt.legend())
-                ax.set_ylabel('Income', labelpad=15, color='darkgreen')
                 ax.set_xlabel(self.stocks[i]+' Income statement ',  color='darkgreen',
                              weight='bold')
                 # ax.legend()
                 ax.set_facecolor("white")
                 ax.text(
                         0.75,
-                        0.02,
+                        0,
                         'Greenfield Capital Advisors Group S.L.',
                         color='black',
                         horizontalalignment='center',

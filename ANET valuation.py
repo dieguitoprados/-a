@@ -35,10 +35,12 @@ apikey='d60d2f087ecf05f94a3b9b3df34310a9'
 symbol=['ANET', 'CSCO']
 
 anet=c.get_data(symbol, apikey)
+
 anet.get_financials()
 financials=anet.financials
 anet.get_price()
 price=anet.price
+
 execs=fmp.key_executives(apikey, symbol[0])
 # graphs
 
@@ -49,7 +51,11 @@ anet.profitability()
 anet.solvency()
 anet.hist_returns()
 
-fmp.income_statement_as_reported(apikey, symbol[0])
+# dcf=fmp.discounted_cash_flow(apikey, symbol[0])
+# hdcf=fmp.historical_daily_discounted_cash_flow(apikey, symbol[0], limit =60)
+
+# l=pd.DataFrame(fmp.income_statement(apikey, symbol[0],'quarter'))
+# ass=f.clean_financials(fmp.income_statement(apikey, symbol[0],'quarter', limit=90))
 print("--- %s seconds ---" % (time.time() - s))
 
 # plt.style.use('seaborn-darkgrid')

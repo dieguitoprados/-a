@@ -25,10 +25,22 @@ apikey='d60d2f087ecf05f94a3b9b3df34310a9'
 def clean_financials(df):
     
     df=pd.DataFrame(df)
-    df=df.set_index('date')
+    try:
+        df['fillingDate']=pd.to_datetime(df['fillingDate'])
+    except:
+        df['date']=pd.to_datetime(df['date'])
+    try:
+        df=df.set_index('fillingDate')
+    except:
+        df=df.set_index('date')
     df=df.select_dtypes(exclude=['object'])
     df=df.sort_index(ascending=True)
     return df
 
+def ttm(df):
+    df=df+df.shift(1)+df.shift(2)+df.shift(3)
+    df=df.dropna()
+
+    return df
 # def get_financials(stocks, apikey):
     
