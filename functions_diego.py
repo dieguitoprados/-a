@@ -40,7 +40,16 @@ def clean_financials(df):
 def ttm(df):
     df=df+df.shift(1)+df.shift(2)+df.shift(3)
     df=df.dropna()
-
+    
     return df
-# def get_financials(stocks, apikey):
+def ttmday(df):
+    df=df+df.shift(1)+df.shift(2)+df.shift(3)
+    df=df.dropna()
+    return df
+
+def price_ratios(ttm, price):
+    ttm
+
+
+
     

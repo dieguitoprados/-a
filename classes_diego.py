@@ -58,6 +58,7 @@ class get_data():
                 self.financials[i].append(list())
                 self.financials[i].append(list())
                 self.financials[i].append(list())
+                self.financials[i].append(list())
                 self.financials[i][1].append(f.clean_financials(fmp.balance_sheet_statement(self.apikey, self.stocks[i],'quarter', 15)))
                 self.financials[i][1].append(f.clean_financials(fmp.income_statement(self.apikey, self.stocks[i],'quarter', 15)))
                 self.financials[i][1].append(f.clean_financials(fmp.cash_flow_statement(self.apikey, self.stocks[i],'quarter', 15)))
@@ -65,11 +66,11 @@ class get_data():
                 self.financials[i][2].append(f.clean_financials(fmp.balance_sheet_statement(self.apikey, self.stocks[i],'annual', 15)))
                 self.financials[i][2].append(f.clean_financials(fmp.income_statement(self.apikey, self.stocks[i],'annual', 15)))
                 self.financials[i][2].append(f.clean_financials(fmp.cash_flow_statement(self.apikey, self.stocks[i],'annual', 15)))
-                self.financials[i][1].append(f.clean_financials(fmp.financial_ratios(self.apikey, self.stocks[i],period='annual',limit=15)))
+                self.financials[i][2].append(f.clean_financials(fmp.financial_ratios(self.apikey, self.stocks[i],period='annual',limit=15)))
                 self.financials[i][3].append(f.ttm(f.clean_financials(fmp.balance_sheet_statement(self.apikey, self.stocks[i],'quarter', 15))))
                 self.financials[i][3].append(f.ttm(f.clean_financials(fmp.income_statement(self.apikey, self.stocks[i],'quarter', 15))))
                 self.financials[i][3].append(f.ttm(f.clean_financials(fmp.cash_flow_statement(self.apikey, self.stocks[i],'quarter', 15))))
-
+                
             
             
             except Exception:
@@ -107,15 +108,16 @@ class get_data():
                 self.price[i].append(self.stocks[i])
                 self.price[i].append(f.clean_financials(fmp.historical_price_full(self.apikey, self.stocks[i])))
                 self.price[i].append(f.clean_financials(fmp.historical_chart(self.apikey, self.stocks[i], '1min')))
+                self.financials[i][4].append(self.financials[i][3][0].reindex(self.price[i][1].index,method='ffill').dropna())
+                self.financials[i][4].append(self.financials[i][3][1].reindex(self.price[i][1].index,method='ffill').dropna())
+                self.financials[i][4].append(self.financials[i][3][2].reindex(self.price[i][1].index,method='ffill').dropna())
+            
             except Exception:
                 pass            
         return self.price
     def get_price_ratios(self):
         for i in range(0, len(self.stocks)):
-            p=self.price[i][1]['close']
-            eps=self.financials[i][1][1]['eps']
-            
-            
+            i
             
     def histt(self):
         for i in range(0,len(self.stocks)):
@@ -155,7 +157,7 @@ class get_data():
                 
                 # Save the chart so we can loop through the bars below.
                     
-                bars=ax.bar(x=np.arange(self.financials[i][1][1]['revenue'].size),color='lime',height=self.financials[i][1][1]['revenue'],label='revenue',tick_label=self.financials[i][1][1].index.strftime('%d/%m/%Y'))
+                bars=plt.bar(x=np.arange(self.financials[i][1][1]['revenue'].size),color='lime',height=self.financials[i][1][1]['revenue'],label='revenue',tick_label=self.financials[i][1][1].index.strftime('%d/%m/%Y'))
                 for bar in bars:
                     ax.text(
                         bar.get_x() + bar.get_width() / 2,
@@ -166,7 +168,7 @@ class get_data():
                         weight='bold',size=8
                     )
                 
-                bars=ax.bar(x=np.arange(self.financials[i][1][1]['revenue'].size),color='limegreen',height=self.financials[i][1][1]['grossProfit'],label='grossProfit')
+                bars=plt.bar(x=np.arange(self.financials[i][1][1]['revenue'].size),color='limegreen',height=self.financials[i][1][1]['grossProfit'],label='grossProfit')
                 for bar in bars:
                     ax.text(
                         bar.get_x() + bar.get_width() / 2,
@@ -177,7 +179,7 @@ class get_data():
                         weight='bold',size=8
                     )
                 
-                bars=ax.bar(x=np.arange(self.financials[i][1][1]['revenue'].size),color='seagreen',height=self.financials[i][1][1]['ebitda'],label='ebitda')
+                bars=plt.bar(x=np.arange(self.financials[i][1][1]['revenue'].size),color='seagreen',height=self.financials[i][1][1]['ebitda'],label='ebitda')
                 for bar in bars:
                     ax.text(
                         bar.get_x() + bar.get_width() / 2,
@@ -188,7 +190,7 @@ class get_data():
                         weight='bold',size=8
                     )
                 
-                bars=ax.bar(x=np.arange(self.financials[i][1][1]['revenue'].size),color='forestgreen',height=self.financials[i][1][1]['netIncome'],label='netIncome')
+                bars=plt.bar(x=np.arange(self.financials[i][1][1]['revenue'].size),color='forestgreen',height=self.financials[i][1][1]['netIncome'],label='netIncome')
                 for bar in bars:
                     ax.text(
                         bar.get_x() + bar.get_width() / 2,

@@ -59,6 +59,7 @@ fmp.earnings_surprises(apikey, symbol[0])
 
 plt.style.use('seaborn-darkgrid')
 fig, ax = plt.subplots()  
+ax.plot(price[0][1], color='green', label='Price', linewidth=1, alpha=0.8)
 ax.plot(pe, color='forestgreen', label='PE ratio', linewidth=2, alpha=0.8)
 ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc='lower left',
                       ncol=2, mode="expand", borderaxespad=0.)
