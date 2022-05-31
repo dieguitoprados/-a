@@ -45,6 +45,14 @@ financials=anet.financials
 anet.get_price()
 price=anet.price
 
+av=fmp.available_indexes(apikey)
+indexes=pd.DataFrame(f.clean_financials(fmp.historical_price_full(apikey, '^TYX'))['close'])
+for i in range(1,len(av)):
+    indexes[av[i]['symbol']]=f.clean_financials(fmp.historical_price_full(apikey, av[i]['symbol']))['close']
+
+indma20=indexes.rolling(window=100).mean()
+indma50=indexes.rolling(window=50).mean()
+indma100=indexes.rolling(window=100).mean()
 
 
 fmp.financial_ratios(apikey, symbol[0])
@@ -59,11 +67,16 @@ fmp.earnings_surprises(apikey, symbol[0])
 
 plt.style.use('seaborn-darkgrid')
 fig, ax = plt.subplots()  
-ax.plot(price[0][1], color='green', label='Price', linewidth=1, alpha=0.8)
-ax.plot(pe, color='forestgreen', label='PE ratio', linewidth=2, alpha=0.8)
+ax.plot(price[0][1]['close'], color='green', label='Price', linewidth=1, alpha=0.8)
+ax2=ax.twinx()
+
+# ax2.plot(financials[0][1][3]['returnOnEquity']*100, color='black', label='PE ratio', linewidth=1, alpha=0.8)
+ax2.plot(indexes['^VIX'], color='black', label='PE ratio', linewidth=1, alpha=0.5)
+ax2.plot(indma50['^VIX'], color='yellowgreen', label='PE ratio', linewidth=2, alpha=0.8)
 ax.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc='lower left',
                       ncol=2, mode="expand", borderaxespad=0.)
 ax.yaxis.grid(True, color='palegreen', alpha=0.3)
+ax2.yaxis.grid(True, color='palegreen', alpha=0.3)
 ax.xaxis.grid(True, color='palegreen', alpha=0.3)
 
 # ax.xaxis.set_major_formatter(
