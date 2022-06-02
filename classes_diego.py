@@ -314,7 +314,7 @@ class get_data():
                 ax.text(
                         0.75,
                         0.02,
-                        'Greenfield Capital Advisors Group S.L.',
+                        'Greenfield Capital: Diego Prados',
                         color='black',
                         horizontalalignment='center',
                         verticalalignment='top',
@@ -346,11 +346,13 @@ class get_data():
                 ax.text(
                         0.75,
                         0.02,
-                        'Greenfield Capital Advisors Group S.L.',
+                        'Greenfield Capital: Diego Prados',
                         horizontalalignment='center',
                         verticalalignment='top',
                         transform=ax.transAxes)
                 fig.tight_layout()
+                plt.savefig(self.stocks[i]+'_Liquidity_Ratios_'+str(dt.date.today()),dpi=600)
+
             except Exception:
                 pass
     def margins(self):
@@ -375,11 +377,13 @@ class get_data():
                 ax.text(
                         0.75,
                         0.02,
-                        'Greenfield Capital Advisors Group S.L.',
+                        'Greenfield Capital: Diego Prados',
                         horizontalalignment='center',
                         verticalalignment='top',
                         transform=ax.transAxes)
                 fig.tight_layout()
+                plt.savefig(self.stocks[i]+'_Profit_Margins_'+str(dt.date.today()),dpi=600)
+
             except Exception:
                 pass
             
@@ -406,11 +410,13 @@ class get_data():
                 ax.text(
                         0.75,
                         0.02,
-                        'Greenfield Capital Advisors Group S.L.',
+                        'Greenfield Capital: Diego Prados',
                         horizontalalignment='center',
                         verticalalignment='top',
                         transform=ax.transAxes)
                 fig.tight_layout()
+                plt.savefig(self.stocks[i]+'_profit_ratios_'+str(dt.date.today()),dpi=600)
+
             except Exception:
                 pass
                             
@@ -460,11 +466,13 @@ class get_data():
                 ax.text(
                         0.75,
                         0.02,
-                        'Greenfield Capital Advisors Group S.L.',
+                        'Greenfield Capital: Diego Prados',
                         horizontalalignment='center',
                         verticalalignment='top',
                         transform=ax.transAxes)
                 fig.tight_layout()
+                plt.savefig(self.stocks[i]+'_debt_ratios_'+str(dt.date.today()),dpi=600)
+
             except Exception:
                 pass
     def hist_returns(self):
