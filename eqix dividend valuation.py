@@ -40,7 +40,7 @@ print("--- %s seconds ---" % (time.time() - s))
 
 
 # symbol=['EQIX']
-eqix = yf.Ticker("EQIX")
+eqix = yf.Ticker("AAPL")
 # ng = yf.Ticker("NG=F")
 
 # # get stock info
@@ -322,14 +322,14 @@ for name in remodels:
 
     
     
-lab=['recapm', 'reffm', 'reapmw']
-p.linep([fgro[0],fgro[1],fgro[2]], 'linear',['recapm', 'reffm', 'reapmw'], 10, False, 'price as a function of growth','' , 'source')
-p.linep([regordon], 'linear',['regordon'], 10, False, 're as a function of growth','' , 'source')
+# lab=['recapm', 'reffm', 'reapmw']
+# p.linep([fgro[0],fgro[1],fgro[2]], 'linear',['recapm', 'reffm', 'reapmw'], 10, False, 'price as a function of growth','' , 'source')
+# p.linep([regordon], 'linear',['regordon'], 10, False, 're as a function of growth','' , 'source')
 
-fig, ax, colors, im=p.layout(10, False, 'log')
-p.line([fgro[0],fgro[1],fgro[2]], ['re capm', 're ffm', 're ffm + SPREAD'], colors,ax)
-p.addt(fig, colors, 'Price of Equinix ', 'as a function of dividends growth', 'Yahoofinance.com', False)
-plt.savefig('p(g).png', dpi=600)
+# fig, ax, colors, im=p.layout(10, False, 'log')
+# p.line([fgro[0],fgro[1],fgro[2]], ['re capm', 're ffm', 're ffm + SPREAD'], colors,ax)
+# p.addt(fig, colors, 'Price of Equinix ', 'as a function of dividends growth', 'Yahoofinance.com', False)
+# plt.savefig('p(g).png', dpi=600)
 
 
 

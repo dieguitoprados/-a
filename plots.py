@@ -79,7 +79,7 @@ def layout(size,dark, l='linear'):
     if dark == True:
         # colors = pl.cm.YlGn(np.linspace(0,1,len(v)))
         plt.style.use('dark_background')
-        fig, ax = plt.subplots()  
+        fig, ax = plt.subplots(figsize=(size))  
         ax.spines.top.set_visible(False)
         ax.spines.right.set_visible(False)
         ax.yaxis.set_ticks_position('left')
@@ -98,7 +98,7 @@ def layout(size,dark, l='linear'):
     if dark == False:
         # colors = pl.cm.viridis(np.linspace(0,1,len(v)))
         plt.style.use('seaborn-ticks')
-        fig, ax = plt.subplots()  
+        fig, ax = plt.subplots(figsize=(size))  
         ax.spines.top.set_visible(False)
         ax.spines.right.set_visible(False)
         # ax.spines.left.set_visible(False)
