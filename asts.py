@@ -266,7 +266,34 @@ waccc=(1+wacc)**(np.linspace(0, 5, 6))
 
 (incproject.loc['FreeCashFlow'][-1]*(1+ltg)/(wacc-ltg))/((1+wacc)**5)
 shares=f.cleanfinanual(facts, 'WeightedAverageNumberOfSharesOutstandingBasic')['val'][-1]
-(sum(incproject.loc['FreeCashFlow']/waccc)+(incproject.loc['FreeCashFlow'][-1]*(1+ltg)/(wacc-ltg))/((1+wacc)**5))/shares
+print((sum(incproject.loc['FreeCashFlow']/waccc)+(incproject.loc['FreeCashFlow'][-1]*(1+ltg)/(wacc-ltg))/((1+wacc)**5))/shares)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 p.linep([ass.loc['StockholdersEquity'].append(incproject.loc['TotalEquity']),
          ass.loc['cashAndShortTermInvestments'].append(incproject.loc['CashAndEquivalents']),
@@ -274,12 +301,15 @@ p.linep([ass.loc['StockholdersEquity'].append(incproject.loc['TotalEquity']),
         'linear', ['Total Equity','Cash Projections', 'Retained Earnings'],
         (6.4, 4.8), False, 'Cash and Cash Equivalents Projection',
         'AAPL 2022', 'sec.gov')
-ovb.lineovb([ass.loc['StockholdersEquity'].append(incproject.loc['TotalEquity']),
-         ass.loc['cashAndShortTermInvestments'].append(incproject.loc['CashAndEquivalents']),
-         ass.loc['RetainedEarnings'].append(incproject.loc['RetainedEarnings'])],
-        'linear', ['Total Equity','Cash Projections', 'Retained Earnings'],
-        (6.4, 4.8), False, 'Cash and Cash Equivalents Projection',
-        'AAPL 2022', 'sec.gov')
+# ovb.lineovb([ass.loc['StockholdersEquity'].append(incproject.loc['TotalEquity']),
+#          ass.loc['cashAndShortTermInvestments'].append(incproject.loc['CashAndEquivalents']),
+#          ass.loc['RetainedEarnings'].append(incproject.loc['RetainedEarnings'])],
+#         'linear', ['Total Equity','Cash Projections', 'Retained Earnings'],
+#         (6.4, 4.8), False, 'Cash and Cash Equivalents Projection',
+#         'AAPL 2022', 'sec.gov')
+
+
+
 p.linep([ass.loc['StockholdersEquity'].append(incproject.loc['TotalEquity']),
          ass.loc['cashAndShortTermInvestments'].append(incproject.loc['CashAndEquivalents']),
          ass.loc['RetainedEarnings'].append(incproject.loc['RetainedEarnings'])],

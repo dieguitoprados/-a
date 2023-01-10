@@ -48,17 +48,28 @@ date.index=date.index.date
 date=date.drop('Date', axis=1)
 date=date.loc[dt.date(2014, 1, 1):]
 
-eqix = yf.Ticker("NFLX")
+eqix = yf.Ticker("EQIX")
+qdiv=eqix.dividends.iloc[6:]
+ttmdiv=(qdiv+qdiv.shift(1)+qdiv.shift(2)+qdiv.shift(3)).dropna()
+ttmgr=(ttmdiv/ttmdiv.shift(1)-1).dropna()
+ttmgr=(ttmgr+1)**(1/3)-1
+ttmgr=ttmgr.resample('BMS').first().fillna(method='ffill')
 # ng = yf.Ticker("NG=F")
 
 # # get stock info
 # eqix.info
-
 # # get historical market data
-eq = eqix.history(period="max", interval = "1mo", )
-eq=100*(eq['Close']/eq['Close'].shift(1)-1)
+eq = eqix.history(period="max", interval = "1mo", ).dropna()
+eqq=100*(eq['Close']/eq['Close'].shift(1)-1)
 
-date['eqix']=eq
+date['eqix']=eqq
+date['mgr']=ttmgr*100
+date['yield']=100*ttmdiv.resample('BMS').first().fillna(method='ffill')/eq['Close']
+date['aaa'] = fred.get_series('AAA')
+date['aaa'] = fred.get_series('AAA')
+date['aaa'] = fred.get_series('AAA')
+date['aaa'] = fred.get_series('AAA')
+date['aaa'] = fred.get_series('AAA')
 date['aaa'] = fred.get_series('AAA')
 date['baa' ]= fred.get_series('BAA')
 date['spread']=date['baa']-date['aaa']
@@ -69,10 +80,10 @@ date['dgs1'] = fred.get_series('GS1')
 date['exi']=date['dgs1']-date['RF']
 date=date.dropna()
 
-capm=pd.DataFrame(date[['eqix', 'RF', 'Mkt-RF']])
+capm=pd.DataFrame(date[['eqix', 'RF', 'Mkt-RF','yield']])
 print('CAPM') 
 Y=capm['eqix']-capm['RF']
-X=capm['Mkt-RF']
+X=capm[['Mkt-RF', 'yield']]
 X = sm.add_constant(X)
 model = sm.OLS(Y,X)
 results=model.fit(cov_type='HC1')

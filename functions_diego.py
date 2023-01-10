@@ -7,6 +7,7 @@ Created on Wed May  4 01:28:33 2022
 import matplotlib.pylab as pl
 import datetime as dt
 import statsmodels.api as sm
+import pandas_datareader.data as reader
 
 import streamlit as st
 import pandas as pd
@@ -36,36 +37,26 @@ apikey='d60d2f087ecf05f94a3b9b3df34310a9'
 
 # CLEANING FUNCTIONS 
 
-def clean_financials(df):
+# def clean_financials(df):
     
-    df=pd.DataFrame(df)
-    try:
-        df['fillingDate']=pd.to_datetime(df['fillingDate'])
-    except:
-        df['end']=pd.to_datetime(df['date'])
-    try:
-        df=df.set_index('fillingDate')
-    except:
-        df=df.set_index('date')
-    df=df.select_dtypes(exclude=['object'])
-    df=df.sort_index(ascending=True)
-    return df
+#     df=pd.DataFrame(df)
+#     try:
+#         df['fillingDate']=pd.to_datetime(df['fillingDate'])
+#     except:
+#         df['end']=pd.to_datetime(df['date'])
+#     try:
+#         df=df.set_index('fillingDate')
+#     except:
+#         df=df.set_index('date')
+#     df=df.select_dtypes(exclude=['object'])
+#     df=df.sort_index(ascending=True)
+#     return df
 
 def ttm(df):
     df=df+df.shift(1)+df.shift(2)+df.shift(3)
     df=df.dropna()
     
     return df
-def ttmday(df):
-    df=df+df.shift(1)+df.shift(2)+df.shift(3)
-    df=df.dropna()
-    return df
-
-def price_ratios(ttm, price):
-    
-    ttm
-    
-    
 
 def normalize(series):
     series=100*(series/series.iloc[0]-1)
@@ -74,12 +65,18 @@ def normalize(series):
 def cagr(start, end, periods):
     return(end/start)**(1/periods)-1
 
-
-
 def cik(tikr):
     mapper = StockMapper()
     ma=mapper.ticker_to_cik
     return ma[tikr]
+
+def load_factors(start):
+    factors=reader.DataReader('F-F_Research_Data_Factors', 'famafrench', start, dt.date.today())[0]
+    factors.index=pd.date_range(start=start, periods=len(factors), freq='M')
+    factors.index=pd.to_datetime(factors.index, format='%Y%m')
+    end=factors.index[-1]
+    return factors, end
+
 
 def cleanfinttm(df, name):
     
@@ -136,6 +133,10 @@ def clean(df, name):
     df=df.sort_index(ascending=True)
     
     return dff
+
+    
+
+
 
 def re(tickr):
     eqix = yf.Ticker(tickr)

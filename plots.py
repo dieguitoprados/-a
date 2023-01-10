@@ -53,8 +53,6 @@ def col(dark):
         g11='white'
         colors=[]
         colors=[g1,g2,g3,g4,g5,g6,g7,g8,g9,g10,g11]
-    return colors
-
     if dark==True:
         g1='#008037'
         g2='#7ED957'
@@ -77,43 +75,20 @@ def col(dark):
 def layout(size,dark, l='linear'):
 
     if dark == True:
-        # colors = pl.cm.YlGn(np.linspace(0,1,len(v)))
         plt.style.use('dark_background')
-        fig, ax = plt.subplots(figsize=(size))  
-        ax.spines.top.set_visible(False)
-        ax.spines.right.set_visible(False)
-        ax.yaxis.set_ticks_position('left')
-        ax.xaxis.set_ticks_position('bottom')
-        ax.yaxis.grid(False)
-        ax.xaxis.grid(False)
-        colors=col(dark)
-        im = plt.imread('glogo.png')
-        plt.rcParams['figure.dpi'] = 300
-        plt.yscale(l)
-
-        # colors=colors[:len(v)]
-        
-        
-
     if dark == False:
-        # colors = pl.cm.viridis(np.linspace(0,1,len(v)))
         plt.style.use('seaborn-ticks')
-        fig, ax = plt.subplots(figsize=(size))  
-        ax.spines.top.set_visible(False)
-        ax.spines.right.set_visible(False)
-        # ax.spines.left.set_visible(False)
-        ax.yaxis.set_ticks_position('left')
-        ax.xaxis.set_ticks_position('bottom')
-        ax.yaxis.grid(False)
-        ax.xaxis.grid(False)
-        colors=col(dark)
-        im = plt.imread('glogo.png')
-        plt.rcParams['figure.dpi'] = 300
-        plt.yscale(l)
-
-        # colors=colors[:len(v)]
-
-        
+    fig, ax = plt.subplots(figsize=(size))  
+    ax.spines.top.set_visible(False)
+    ax.spines.right.set_visible(False)
+    ax.yaxis.set_ticks_position('left')
+    ax.xaxis.set_ticks_position('bottom')
+    ax.yaxis.grid(False)
+    ax.xaxis.grid(False)
+    colors=col(dark)
+    im = plt.imread('glogo.png')
+    plt.rcParams['figure.dpi'] = 300
+    plt.yscale(l)        
     return fig, ax, colors, im
         
 # def sec_ax(s, ax):

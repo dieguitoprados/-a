@@ -145,13 +145,6 @@ print(results.summary())
 rr=pd.DataFrame(resultados, index=litt, columns=['Adj R-squared','Intercept', 'P>|z| Int',
                                                 'B1(Mkt-RF)', 'P>|z| B1','B2(CPIus)','P>|z| B2','B3(SMB)', 'P>|z| B3','B4(HML)',
                                                 'P>|z| B4'])
-styler = rr.style
-styler = styler.background_gradient()
-htmlCodeWithStyle = styler.to_html()
-file = open("pandas.html","w")
-file.write(htmlCodeWithStyle)
-file.close()
-
 
 import lboro_graphs as lb
 

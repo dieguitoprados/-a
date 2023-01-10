@@ -11,19 +11,19 @@ from sec_edgar_api import EdgarClient
 import plots as p
 import functions_diego as f
 import json
-edgar = EdgarClient(user_agent="<Sample Company Name> <Admin Contact>@<Sample Company Domain>")
-sub=edgar.get_submissions(cik="0001101239")
-filings=pd.DataFrame(sub['filings']['recent'])
-edgar.get_frames(taxonomy="us-gaap", tag="CashAndCashEquivalentsAtCarryingValue", unit="USD", year="2019", quarter=1)
-facts=edgar.get_company_facts(f.cik('NFLX'))
-facts=edgar.get_company_facts(cik="320193")
-assett=edgar.get_frames(taxonomy="us-gaap", tag="Assets", unit="USD", year="2022", quarter=1)
-assets=pd.DataFrame(assett['data'])
-asse=edgar.get_frames(taxonomy="us-gaap", tag="Cash", unit="USD", year="2021", quarter=4)
-asse=pd.DataFrame(asse['data'])
+# edgar = EdgarClient(user_agent="<Sample Company Name> <Admin Contact>@<Sample Company Domain>")
+# sub=edgar.get_submissions(cik="0001101239")
+# filings=pd.DataFrame(sub['filings']['recent'])
+# edgar.get_frames(taxonomy="us-gaap", tag="CashAndCashEquivalentsAtCarryingValue", unit="USD", year="2019", quarter=1)
+# facts=edgar.get_company_facts(f.cik('NFLX'))
+# facts=edgar.get_company_facts(cik="320193")
+# assett=edgar.get_frames(taxonomy="us-gaap", tag="Assets", unit="USD", year="2022", quarter=1)
+# assets=pd.DataFrame(assett['data'])
+# asse=edgar.get_frames(taxonomy="us-gaap", tag="Cash", unit="USD", year="2021", quarter=4)
+# asse=pd.DataFrame(asse['data'])
 import os
 # assign directory
-directory = 'C:\\Users\\diego\\Downloads\\companyfacts'
+directory = 'C:\\Users\\diego\\OneDrive\\Documents\\GitHub\\-a\\companyfacts'
  
 # iterate over files in
 # that directory
@@ -36,10 +36,19 @@ for file in os.listdir(directory):
     cik.append(file)
 cik = [i.replace('CIK','') for i in cik]
 cik = [i.replace('.json','') for i in cik]
-directory = 'C:\\Users\\diego\\Downloads\\companyfacts\\CIK0001101239.json'
-equ=json.load(open(directory))
-equ=equ['facts']['us-gaap']
+directory = 'C:\\Users\\diego\\OneDrive\\Documents\\GitHub\\-a\\companyfacts\\CIK0000049279.json'
 
+e=[]
+for i in range(100):
+    try:
+        equ=json.load(open(directories[i]))
+        e.append(list(equ['facts']['us-gaap'].keys()))
+    except:
+        print(cik[i])
+        
+        
+set(e[0]).intersection(e[1:])
+        
 fact=[]
 
 nd=[]
