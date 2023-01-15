@@ -6,13 +6,14 @@ Created on Wed Jan  4 13:20:28 2023
 """
 
 import time
-import pandas_datareader.data as reader
+import pandas_datareader.data as web
 import statsmodels.api as sm
 import datetime as dt
 import pandas as pd
 import numpy as np
 import requests
 import importlib
+from tqdm import tqdm
 import datetime as dt
 import matplotlib.pyplot as plt
 import scipy.stats as scipy
@@ -31,6 +32,10 @@ print("--- %s seconds ---" % (time.time() - s))
 
 from fredapi import Fred
 fred = Fred(api_key='97606ccae6e98b9ef43f33fb7d7b4492')
+
+edgar = EdgarClient(user_agent="<Sample Company Name> <Admin Contact>@<Sample Company Domain>")
+
+edgar.get_frames('us-gaap', 'inventoryNet', 'USD', '2020')
 
 apikey='I9MAV4MUJC2LWW69'
 start=dt.date(2000, 1, 31)
@@ -123,13 +128,66 @@ class re():
 
         return self.ffm
 
-        
-        
-        
-        
+
+import os
+import json
+# assign directory
+directory = 'C:\\Users\\diego\\OneDrive\\Documents\\GitHub\\-a\\companyfacts'
+ 
+# iterate over files in
+# that directory
+directories=[]
+for filename in os.listdir(directory):
+    directories.append(os.path.join(directory, filename))
+    # checking if it is a file
+cik=[]
+for file in os.listdir(directory):
+    cik.append(file)
+cik = [i.replace('CIK','') for i in cik]
+cik = [i.replace('.json','') for i in cik]
+
+def cleanbalQ(facts, name):
+    
+    df=facts['facts']['us-gaap'][name]['units']
+    for lot in ['Store','USD', 'USD/shares', 'Year', ('pure','Year'), 'pure', 'shares']:
+        try:
+            df=pd.DataFrame(df[lot])
+        except Exception:
+            pass
+    dff=df.drop_duplicates('end')    
+    dff=dff.set_index(pd.to_datetime(dff['end']))
+    dff=dff.sort_index(ascending=True)
+    dff=dff['val'].rename(name)
+    return dff
+
+inv=[]
+invd=[]
+tic=[]
+for i in tqdm(range(len(cik))):
+    try:
+        equ=json.load(open(f'C:\\Users\\diego\\OneDrive\\Documents\\GitHub\\-a\\submissions\\CIK{cik[i]}.json'))
+        inv.append(equ['sic'])
+        invd.append(equ['sicDescription'])
+    except: Exception
+    pass
+    
+invdb=pd.DataFrame(zip(inv,invd), index=cik, columns=['sic', 'description']).replace('', 0)
+invdb['sic']=invdb['sic'].astype('float')
+invdb=invdb[invdb.sic==1040]
+for i in tqdm(range(len(invdb))):
+    try:
+        tic.append(f.tickr(invdb.index[i]))
+    except:Exception
+    pass
+
+tic=list(pd.DataFrame(tic)[0])
+
+
+
+
 MSFT=re(start)
 factors=MSFT.factors
-MSFT.stocks=stock
+MSFT.stocks=tic
 mret=MSFT.mreturns()
 MSFT.CAPM()
 capm=MSFT.capm
@@ -137,3 +195,7 @@ MSFT.FFM()
 ffm=MSFT.ffm
 MSFT.stocks[2]
 
+rets=factors
+for stock in tqdm(tic):
+    rets[stock]=np.log(web.DataReader(stock, "av-monthly", start=dt.datetime(2005, 2, 9),end=dt.datetime.today(),api_key='I9MAV4MUJC2LWW69')['close']/web.DataReader(stock, "av-monthly", start=dt.datetime(2005, 2, 9),end=dt.datetime.today(),api_key='I9MAV4MUJC2LWW69')['close'].shift(1)).dropna()
+    time.sleep(20.1)

@@ -37,20 +37,20 @@ apikey='d60d2f087ecf05f94a3b9b3df34310a9'
 
 # CLEANING FUNCTIONS 
 
-# def clean_financials(df):
+def clean_financials(df):
     
-#     df=pd.DataFrame(df)
-#     try:
-#         df['fillingDate']=pd.to_datetime(df['fillingDate'])
-#     except:
-#         df['end']=pd.to_datetime(df['date'])
-#     try:
-#         df=df.set_index('fillingDate')
-#     except:
-#         df=df.set_index('date')
-#     df=df.select_dtypes(exclude=['object'])
-#     df=df.sort_index(ascending=True)
-#     return df
+    df=pd.DataFrame(df)
+    try:
+        df['fillingDate']=pd.to_datetime(df['fillingDate'])
+    except:
+        df['end']=pd.to_datetime(df['date'])
+    try:
+        df=df.set_index('fillingDate')
+    except:
+        df=df.set_index('date')
+    df=df.select_dtypes(exclude=['object'])
+    df=df.sort_index(ascending=True)
+    return df
 
 def ttm(df):
     df=df+df.shift(1)+df.shift(2)+df.shift(3)
@@ -69,6 +69,11 @@ def cik(tikr):
     mapper = StockMapper()
     ma=mapper.ticker_to_cik
     return ma[tikr]
+
+def tickr(cik):
+    mapper = StockMapper()
+    ma=mapper.cik_to_tickers
+    return ma[cik]
 
 def load_factors(start):
     factors=reader.DataReader('F-F_Research_Data_Factors', 'famafrench', start, dt.date.today())[0]
