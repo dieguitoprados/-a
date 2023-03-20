@@ -47,7 +47,7 @@ def clean_financials(df):
     try:
         df=df.set_index('fillingDate')
     except:
-        df=df.set_index('date')
+        df=df.set_index('end')
     df=df.select_dtypes(exclude=['object'])
     df=df.sort_index(ascending=True)
     return df

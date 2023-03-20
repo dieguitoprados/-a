@@ -171,7 +171,7 @@ def addt(fig,colors,title,subtitle,source, dark,logo=True):
     )
     # Add authorship
     fig.text(
-        0, 0.005, "Diego Prados. Seeking Alpha Contributor", color='#a2a2a2',
+        0, 0.005, "GREENFIELD CAPITAL", color='#a2a2a2',
         fontsize=16, fontfamily="Helvetica"
     )
 
@@ -179,10 +179,11 @@ def addt(fig,colors,title,subtitle,source, dark,logo=True):
     # fig.add_artist(lines.Line2D([0, 1], [1, 1], lw=3, color=colors[1], solid_capstyle="butt"))
     # fig.add_artist(patches.Rectangle((0, 0.975), 0.05, 0.025, color=colors[1]))
  
-def addlogo(im,fig):
+def addlogo(im,fig, t):
     newax = fig.add_axes([0.8,0.8,0.2,0.2], anchor='NE', zorder=1)
     newax.imshow(im)
     newax.axis('off')
+    plt.savefig(t[0], dpi=300)
     plt.show()
     
 def logg(l):
@@ -212,10 +213,12 @@ def linep(v,l, t,size, dark, title, subtitle, source):
     # if s[0]==True:
     #     secax=sec_ax()
     # return secax
-    addlogo(im, fig)
+    addlogo(im, fig, t)
     # logg(l)
     # fig.tight_layout()
     fig
+    
+    
 
 def barp(bars,l, t,size, dark, title, subtitle, source):
     fig, ax, colors, im=layout(size, dark, l)

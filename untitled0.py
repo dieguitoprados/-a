@@ -1,31 +1,38 @@
-import math
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Feb 20 01:35:00 2023
 
-def calc_beam_angle(altitude):
-  # Earth's radius in meters
-  earth_radius = 6371e3
+@author: diego
+"""
 
-  # Calculate the distance from the Earth's surface to the satellite
-  distance = earth_radius + altitude
+import json
+import gpt_index
 
-  # Calculate the beam angle in radians
-  beam_angle = math.atan(earth_radius / distance)
+# Load the JSON data
+with open('data.json', 'r') as f:
+    data = json.load(f)
 
-  # Convert the beam angle to degrees
-  beam_angle_degrees = beam_angle * 180 / math.pi
+# Convert the JSON data to text format
+text = ""
+for item in data:
+    text += item['field1'] + ' ' + item['field2'] + '\n'
 
-  return beam_angle_degrees
+# Create a GPT-INDEX model
+model = gpt_index.GPTIndex(n_layers=12, n_embd=768, n_head=12)
 
-def calc_radius_of_coverage(altitude, elevation_mask):
-  # Calculate the beam angle in degrees
-  beam_angle_degrees = calc_beam_angle(altitude)
+# Define the training procedure
+loader = gpt_index.DataLoader(text, batch_size=32)
+optimizer = gpt_index.AdamW(model.parameters(), lr=1e-4)
+loss_fn = gpt_index.CrossEntropyLoss()
+trainer = gpt_index.Trainer(model, loader, optimizer, loss_fn)
 
-  # Calculate the elevation angle in degrees
-  elevation_angle_degrees = beam_angle_degrees - elevation_mask
+# Train the model
+trainer.train(10)
 
-  # Calculate the radius of coverage using the elevation angle
-  radius_of_coverage = altitude * math.tan(elevation_angle_degrees * math.pi / 180)
+# Evaluate the model
+val_text = "Some validation text here"
+val_loader = gpt_index.DataLoader(val_text, batch_size=32)
+eval_loss = trainer.evaluate(val_loader)
+print("Validation loss:", eval_loss)
 
-  return radius_of_coverage
-
-# Test the function with an altitude of 400 km and an elevation mask of 20 degrees
-print(calc_radius_of_coverage(500e3, 20))
+# Fine-tune the model and repeat the process
